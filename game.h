@@ -1,3 +1,6 @@
+#ifndef GAME_H
+#define GAME_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -19,4 +22,8 @@ uint16_t possibleMoves(GameBoard *board);
 
 int possibleNextMove(GameBoard *board);
 
+int finishedBoard(GameBoard *board);
+
 int playMove(GameBoard *board, int player, int position);
+
+#endif

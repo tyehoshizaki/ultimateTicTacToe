@@ -42,6 +42,19 @@ int checkDraw(GameBoard *board) {
     return 0;
 }
 
+int finishedBoard(GameBoard *board) {
+    if (checkWin(board, 1)){
+        return 1;
+    }
+    if (checkWin(board, 2)){
+        return -1;
+    }
+    if (checkDraw(board)){
+        return 0;
+    }
+    return 2;
+}
+
 void printBoard(GameBoard *board) {
     for (int i = 0; i < 9; i++) {
         if (board->xBoard & (1 << i)) {

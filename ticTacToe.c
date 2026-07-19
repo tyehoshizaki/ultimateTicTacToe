@@ -2,7 +2,7 @@
 
 int computerMove(GameBoard *board, int computerPlayer){
     
-    int position = possibleNextMove(board);
+    int position = findBestMove(board, computerPlayer);
     if (position < 0 || position > 8) {
         return 1; // No valid moves available
     }
@@ -31,14 +31,14 @@ int main(int argc, char *argv[]) {
     printf("Select game mode:\n");
     printf("0: Two players\n");
     printf("1: Player vs Computer\n");
-    if(scanf("%d", &computerMode) == -1) {
+    if(scanf("%d", &computerMode) != 1) {
         printf("Error reading input.\n");
         return 1;
     }
 
     if(computerMode == 1) {
         printf("Select computer player (1 for X, 2 for O): ");
-        if(scanf("%d", &computerPlayer) == -1) {
+        if(scanf("%d", &computerPlayer) != 1) {
             printf("Error reading input.\n");
             return 1;
         }
@@ -62,7 +62,7 @@ int main(int argc, char *argv[]) {
         } else {
             printf("Player %d's turn. Enter position (1-9): ", player);
 
-            if (scanf("%d", &position) == -1) {
+            if (scanf("%d", &position) != 1) {
                 printf("Error reading input.\n");
                 break;
             }
