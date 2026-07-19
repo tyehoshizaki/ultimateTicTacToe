@@ -1,7 +1,18 @@
 #include "minimax.h"
 
-int minimax(GameBoard *board, int depth, int isMaximizing, int player) { // ignoring depth for now, but it can be used to limit the search depth
-    int result = finishedBoard(board);
+int checkResult(GameBoard *board) {
+    if (checkWinner(board, 1)) {
+        return 1; // X wins
+    } else if (checkWinner(board, 2)) {
+        return -1; // O wins
+    } else if (checkDraw(board)) {
+        return 0; // Draw
+    }
+    return 2; // Game is still ongoing
+}
+
+int minimax(GameBoard *board, int isMaximizing, int player) {
+    int result = checkResult(board);
     if (result != 2) {
         return result;
     }
@@ -10,9 +21,9 @@ int minimax(GameBoard *board, int depth, int isMaximizing, int player) { // igno
     int score, bestScore;
 
     if (isMaximizing) {
-        bestScore = -1000; // Initialize to a very low value
+        bestScore = -1000;
     } else {
-        bestScore = 1000; // Initialize to a very high value
+        bestScore = 1000;
     }
 
     for(int i = 0; i < 9; i++) {
@@ -20,7 +31,7 @@ int minimax(GameBoard *board, int depth, int isMaximizing, int player) { // igno
             GameBoard newBoard = *board;
             playMove(&newBoard, player, i);
 
-            score = minimax(&newBoard, depth, !isMaximizing, player == 1 ? 2 : 1);
+            score = minimax(&newBoard, !isMaximizing, player == 1 ? 2 : 1);
 
             if (isMaximizing) {
                 bestScore = score > bestScore ? score : bestScore;
@@ -37,9 +48,9 @@ int findBestMove(GameBoard *board, int player) {
     int bestMove = -1;
     int bestScore;
     if (player == 1) {
-        bestScore = -1000; // Initialize to a very low value
+        bestScore = -1000;
     } else {
-        bestScore = 1000; // Initialize to a very high value
+        bestScore = 1000;
     }
 
     uint16_t freeMoves = possibleMoves(board);
@@ -49,7 +60,7 @@ int findBestMove(GameBoard *board, int player) {
             GameBoard newBoard = *board;
             playMove(&newBoard, player, i);
 
-            int score = minimax(&newBoard, 0, player == 1 ? 0 : 1, player == 1 ? 2 : 1);
+            int score = minimax(&newBoard, player == 1 ? 0 : 1, player == 1 ? 2 : 1);
 
             if (player == 1) {
                 if (score > bestScore) {

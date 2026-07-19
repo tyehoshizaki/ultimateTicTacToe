@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
     printf("Select game mode:\n");
     printf("0: Two players\n");
     printf("1: Player vs Computer\n");
-    if(scanf("%d", &computerMode) != 1) {
+    if(scanf("%d", &computerMode) == -1) {
         printf("Error reading input.\n");
         return 1;
     }
@@ -79,8 +79,7 @@ int main(int argc, char *argv[]) {
             }
         }
 
-        // Check for win or draw
-        if (checkWin(&board, player)) {
+        if (checkWinner(&board, player)) {
             printf("Player %d wins!\n", player);
             printBoard(&board);
             break;

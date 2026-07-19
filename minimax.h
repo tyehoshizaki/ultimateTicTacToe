@@ -3,7 +3,9 @@
 
 #include "game.h"
 
-int minimax(GameBoard *board, int depth, int isMaximizing, int player);
+int checkResult(GameBoard *board);
+
+int minimax(GameBoard *board, int isMaximizing, int player);
 
 int findBestMove(GameBoard *board, int player);
 
