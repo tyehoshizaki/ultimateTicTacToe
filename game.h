@@ -16,8 +16,5 @@ int playMove(GameBoard *board, int player, int position);
 int checkWinner(GameBoard *board, int player);
 int checkWin(uint16_t board);
 int checkDraw(GameBoard *board);
-uint16_t possibleMoves(GameBoard *board);
-int possibleNextMove(GameBoard *board);
-
 
 #endif

@@ -1,5 +1,19 @@
 #include "minimax.h"
 
+uint16_t possibleMoves(GameBoard *board) {
+    uint16_t occupied = board->xBoard | board->oBoard;
+    uint16_t freePositions = ~occupied & 0b111111111; // Only consider the first 9 bits
+
+    return freePositions;
+}
+
+int possibleNextMove(GameBoard *board){
+    uint16_t freePositions = possibleMoves(board);
+    int nextAvailableMove = __builtin_ctz(freePositions);
+
+    return nextAvailableMove;
+}
+
 int checkResult(GameBoard *board) {
     if (checkWinner(board, 1)) {
         return 1; // X wins

@@ -39,11 +39,6 @@ int playMove(GameBoard *board, int player, int position) {
     return 1;
 }
 
-int checkWinner(GameBoard *board, int player) {
-    uint16_t playerBoard = (player == 1) ? board->xBoard : board->oBoard;
-    return checkWin(playerBoard);
-}
-
 int checkWin(uint16_t board) {
     if(
         (board & 0b111000000) == 0b111000000 ||
@@ -61,6 +56,11 @@ int checkWin(uint16_t board) {
     }
 }
 
+int checkWinner(GameBoard *board, int player) {
+    uint16_t playerBoard = (player == 1) ? board->xBoard : board->oBoard;
+    return checkWin(playerBoard);
+}
+
 int checkDraw(GameBoard *board) {
     if ((board->xBoard | board->oBoard) == 0b111111111) {
         return 1;
@@ -68,20 +68,3 @@ int checkDraw(GameBoard *board) {
 
     return 0;
 }
-
-
-
-uint16_t possibleMoves(GameBoard *board) {
-    uint16_t occupied = board->xBoard | board->oBoard;
-    uint16_t freePositions = ~occupied & 0b111111111; // Only consider the first 9 bits
-
-    return freePositions;
-}
-
-int possibleNextMove(GameBoard *board){
-    uint16_t freePositions = possibleMoves(board);
-    int nextAvailableMove = __builtin_ctz(freePositions);
-
-    return nextAvailableMove;
-}
-
