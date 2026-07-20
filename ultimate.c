@@ -7,6 +7,8 @@ void printFullBoard(UltimateGameBoard *board) {
             printf("X ");
         } else if (board->oBoard & (1 << i)) {
             printf("O ");
+        } else if (board->fullBoards & (1 << i)) {
+            printf("- ");
         } else {
             printf("%d ", i + 1);
         }
