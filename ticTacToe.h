@@ -1,7 +1,9 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
+#ifndef TICTACTOE_H
+#define TICTACTOE_H
 
-#include "game.h"
+#include "minimax.h"
+#include "ultimateGame.h"
 
 int computerMove(GameBoard *board, int computerPlayer);
+
+#endif

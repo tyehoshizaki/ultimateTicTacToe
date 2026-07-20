@@ -1,7 +1,12 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
+#ifndef MINIMAX_H
+#define MINIMAX_H
 
 #include "game.h"
 
-int minimax(GameBoard *board, int depth, int isMaximizing, int player);
+uint16_t possibleMoves(GameBoard *board);
+int possibleNextMove(GameBoard *board);
+int checkResult(GameBoard *board);
+int minimax(GameBoard *board, int isMaximizing, int player);
+int findBestMove(GameBoard *board, int player);
+
+#endif

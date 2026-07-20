@@ -1,39 +1,93 @@
 #include "minimax.h"
 
-int minimax(GameBoard *board, int depth, int isMaximizing, int player) {
-    if (checkWin(board, 1)) {
-        return -10 + depth; // Player 1 (X) wins
-    }
-    if (checkWin(board, 2)) {
-        return 10 - depth; // Player 2 (O) wins
-    }
-    if (checkDraw(board)) {
+uint16_t possibleMoves(GameBoard *board) {
+    uint16_t occupied = board->xBoard | board->oBoard;
+    uint16_t freePositions = ~occupied & 0b111111111; // Only consider the first 9 bits
+
+    return freePositions;
+}
+
+int possibleNextMove(GameBoard *board){
+    uint16_t freePositions = possibleMoves(board);
+    int nextAvailableMove = __builtin_ctz(freePositions);
+
+    return nextAvailableMove;
+}
+
+int checkResult(GameBoard *board) {
+    if (checkWinner(board, 1)) {
+        return 1; // X wins
+    } else if (checkWinner(board, 2)) {
+        return -1; // O wins
+    } else if (checkDraw(board)) {
         return 0; // Draw
     }
+    return 2; // Game is still ongoing
+}
+
+int minimax(GameBoard *board, int isMaximizing, int player) {
+    int result = checkResult(board);
+    if (result != 2) {
+        return result;
+    }
+
+    uint16_t freeMoves = possibleMoves(board);
+    int score, bestScore;
 
     if (isMaximizing) {
-        int bestScore = -1000;
-        for (int i = 0; i < 9; i++) {
-            if (!checkOccupied(board, i)) {
-                playMove(board, player, i);
-                int score = minimax(board, depth + 1, 0, player == 1 ? 2 : 1);
-                board->xBoard &= ~(1 << i); // Undo move
-                board->oBoard &= ~(1 << i); // Undo move
-                bestScore = score > bestScore ? score : bestScore;
-            }
-        }
-        return bestScore;
+        bestScore = -1000;
     } else {
-        int bestScore = 1000;
-        for (int i = 0; i < 9; i++) {
-            if (!checkOccupied(board, i)) {
-                playMove(board, player, i);
-                int score = minimax(board, depth + 1, 1, player == 1 ? 2 : 1);
-                board->xBoard &= ~(1 << i); // Undo move
-                board->oBoard &= ~(1 << i); // Undo move
+        bestScore = 1000;
+    }
+
+    for(int i = 0; i < 9; i++) {
+        if ((1 << i) & freeMoves) {
+            GameBoard newBoard = *board;
+            playMove(&newBoard, player, i);
+
+            score = minimax(&newBoard, !isMaximizing, player == 1 ? 2 : 1);
+
+            if (isMaximizing) {
+                bestScore = score > bestScore ? score : bestScore;
+            } else {
                 bestScore = score < bestScore ? score : bestScore;
             }
         }
-        return bestScore;
     }
+
+    return bestScore;
+}
+
+int findBestMove(GameBoard *board, int player) {
+    int bestMove = -1;
+    int bestScore;
+    if (player == 1) {
+        bestScore = -1000;
+    } else {
+        bestScore = 1000;
+    }
+
+    uint16_t freeMoves = possibleMoves(board);
+
+    for (int i = 0; i < 9; i++) {
+        if ((1 << i) & freeMoves){
+            GameBoard newBoard = *board;
+            playMove(&newBoard, player, i);
+
+            int score = minimax(&newBoard, player == 1 ? 0 : 1, player == 1 ? 2 : 1);
+
+            if (player == 1) {
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestMove = i;
+                }
+            } else {
+                if (score < bestScore) {
+                    bestScore = score;
+                    bestMove = i;
+                }
+            }
+        }
+    }
+    return bestMove;
 }

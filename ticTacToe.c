@@ -2,7 +2,7 @@
 
 int computerMove(GameBoard *board, int computerPlayer){
     
-    int position = possibleNextMove(board);
+    int position = findBestMove(board, computerPlayer);
     if (position < 0 || position > 8) {
         return 1; // No valid moves available
     }
@@ -28,6 +28,24 @@ int main(int argc, char *argv[]) {
     int computerMode = 0; // 0 for two players, 1 for player vs computer
     int computerPlayer = 2; // Default computer player is 2 (O)
 
+    int gameMode = 0; // 0 for regular Tic Tac Toe, 1 for Ultimate Tic Tac Toe
+
+    printf("Pick a game mode:\n");
+    printf("0: Regular Tic Tac Toe\n");
+    printf("1: Ultimate Tic Tac Toe\n");
+    if(scanf("%d", &gameMode) == -1) {
+        printf("Error reading input.\n");
+        return 1;
+    }
+    if(gameMode != 0 && gameMode != 1) {
+        printf("Invalid selection. Defaulting to regular Tic Tac Toe.\n");
+        gameMode = 0;
+    }
+
+    if(gameMode == 1) {
+        return playUltimateGame();
+    }
+
     printf("Select game mode:\n");
     printf("0: Two players\n");
     printf("1: Player vs Computer\n");
@@ -38,7 +56,7 @@ int main(int argc, char *argv[]) {
 
     if(computerMode == 1) {
         printf("Select computer player (1 for X, 2 for O): ");
-        if(scanf("%d", &computerPlayer) == -1) {
+        if(scanf("%d", &computerPlayer) != 1) {
             printf("Error reading input.\n");
             return 1;
         }
@@ -62,11 +80,11 @@ int main(int argc, char *argv[]) {
         } else {
             printf("Player %d's turn. Enter position (1-9): ", player);
 
-            if (scanf("%d", &position) == -1) {
+            if (scanf("%d", &position) != 1) {
                 printf("Error reading input.\n");
                 break;
             }
-            position--; // Convert to 0-based index
+            position--;
     
             if (position < 0 || position > 8) {
                 printf("Invalid position. Please enter a number between 1 and 9.\n");
@@ -79,8 +97,7 @@ int main(int argc, char *argv[]) {
             }
         }
 
-        // Check for win or draw
-        if (checkWin(&board, player)) {
+        if (checkWinner(&board, player)) {
             printf("Player %d wins!\n", player);
             printBoard(&board);
             break;
