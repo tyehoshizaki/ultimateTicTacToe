@@ -24,6 +24,9 @@ int checkOccupied(GameBoard *board, int position) {
 }
 
 int playMove(GameBoard *board, int player, int position) {
+    if (position < 0 || position > 8) {
+        return 1;
+    }
     if (checkOccupied(board, position)) {
         return 1;
     }
